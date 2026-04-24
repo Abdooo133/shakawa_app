@@ -1,0 +1,8 @@
+*.zip
+*.rar
+shakawa_api/uploads/*
+shakawa_front/build/
+.dart_tool/
+.packages
+.pub/
+shakawa_api/firebase_key.json
