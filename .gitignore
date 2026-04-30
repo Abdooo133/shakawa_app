@@ -6,3 +6,4 @@ shakawa_front/build/
 .packages
 .pub/
 shakawa_api/firebase_key.json
+.env

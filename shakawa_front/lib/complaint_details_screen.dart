@@ -61,6 +61,8 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
     try {
       final response = await http.post(
         url,
+                    headers: {"ngrok-skip-browser-warning":"true"},
+
         body: {'complaint_id': widget.complaintId, 'decision': decision},
       );
 

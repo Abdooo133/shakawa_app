@@ -1,5 +1,4 @@
 class AppConfig {
-  static const String serverIp = "payable-quickly-operating.ngrok-free.dev";
   static const String apiUrl = "payable-quickly-operating.ngrok-free.dev";
   static const String aiUrl = "payable-quickly-operating.ngrok-free.dev";
 

@@ -1,9 +1,13 @@
+
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import google.generativeai as genai
 import re # 🛡️ إضافة مهمة عشان التنظيف
+from dotenv import load_dotenv
+
 
 # 🛡️ دالة التنظيف (لازم تكون موجودة هنا عشان النص اللي جاي من الموبايل يتنظف قبل ما يتصنف)
 def clean_arabic_text(text):
@@ -33,13 +37,15 @@ class Complaint(BaseModel):
     text: str
     customer_name: str = "يا غالي"
 
+
+load_dotenv()
 # 🛑 تنبيه: في بيئة العمل الحقيقية المفاتيح دي بتتحط في ملف .env
 API_KEYS = [
-    "AIzaSyC9CHmMsY8sQnVWkVInvDxgF3VhLmUNZco",
-    "AIzaSyC0pVcDlslRvaW0DsQbc9gHY9-AQS5tqKU",
-    "AIzaSyBr5Sb-EZm46P-gdKY8D4CPoe_tQ9C-Z2w",
-    "AIzaSyBRTYoqgF7BjqiNs8JAvjOrzM-gNELp_3w",
-    "AIzaSyAo9piJ91XDGE6UUI4HD6yC2EJgwUGKsSM",
+    os.getenv("GEMINI_KEY_1"),
+    os.getenv("GEMINI_KEY_2"),
+    os.getenv("GEMINI_KEY_3"),
+    os.getenv("GEMINI_KEY_4"),
+    os.getenv("GEMINI_KEY_5"),
 ]
 
 @app.post("/chatbot")

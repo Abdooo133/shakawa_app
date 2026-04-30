@@ -91,6 +91,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             Uri.parse(
               'https://${AppConfig.apiUrl}/shakawa_api/get_summary.php',
             ),
+            headers: {"ngrok-skip-browser-warning":"true"},
           )
           .timeout(const Duration(seconds: 8));
 

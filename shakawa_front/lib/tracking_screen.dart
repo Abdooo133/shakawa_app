@@ -48,7 +48,10 @@ class _TrackingScreenState extends State<TrackingScreen> {
 
     try {
       var response = await http
-          .post(url, body: {'search_value': searchValue})
+          .post(url, 
+                      headers: {"ngrok-skip-browser-warning":"true"},
+
+          body: {'search_value': searchValue})
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {

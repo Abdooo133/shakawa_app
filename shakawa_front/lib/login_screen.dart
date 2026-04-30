@@ -29,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
       var response = await http
           .post(
             Uri.parse("https://${AppConfig.apiUrl}/shakawa_api/sync_user.php"),
+                        headers: {"ngrok-skip-browser-warning":"true"},
+
             body: {
               "firebase_uid": user.uid,
               "email": user.email ?? "",

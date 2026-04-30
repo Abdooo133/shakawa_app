@@ -77,6 +77,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     try {
       await http.post(
         url,
+                    headers: {"ngrok-skip-browser-warning":"true"},
+
         body: {'notification_id': notificationId.toString()},
       );
       if (mounted) {

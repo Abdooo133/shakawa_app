@@ -125,7 +125,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
         'https://${AppConfig.apiUrl}/shakawa_api/add_complaint.php',
       );
       var request = http.MultipartRequest("POST", uri);
-
+      request.headers['ngrok-skip-browser-warning'] = 'true';
       request.fields['customer_id'] = customerId.toString();
       request.fields['full_name'] = nameController.text;
       request.fields['phone'] = phoneController.text;
