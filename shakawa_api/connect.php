@@ -1,7 +1,7 @@
 <?php
-$servername = "localhost";
-$username = "abdo";
-$password = "123456"; 
+$servername = "db";
+$username = "root";
+$password = "password";
 $dbname = "shakawa_db"; 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -18,12 +18,20 @@ if ($conn->connect_error) {
         "message" => "فشل الاتصال: " . $conn->connect_error
     ]));
 }
-?>
+
+
 //local
 //password:123456
 //dbname:shakawa_db
 
+//docker
+//server name = db
+//username= root 
+//password=password 
+//dbname=shakawa_db
 
 //google
 //password:Abdo@2026
 //dbname:shakawa_backend
+
+?>

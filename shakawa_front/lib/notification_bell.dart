@@ -27,12 +27,12 @@ class _NotificationBellState extends State<NotificationBell> {
     if (widget.customerId == 0) return;
 
     final url = Uri.parse(
-      "http://${AppConfig.serverIp}/shakawa_api/get_notifications.php?customer_id=${widget.customerId}",
+      "https://${AppConfig.apiUrl}/shakawa_api/get_notifications.php?customer_id=${widget.customerId}",
     );
 
     try {
       // 🛡️ التعديل التاني: إضافة Timeout
-      final response = await http.get(url).timeout(const Duration(seconds: 5));
+      final response = await http.get(url, headers: {"ngrok-skip-browser-warning": "true"}).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

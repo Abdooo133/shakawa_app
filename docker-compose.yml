@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # 1. سيرفر الويب (الـ API والـ Admin)
+  web_server:
+    build: ./shakawa_api
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  # 2. سيرفر بايثون (AI Engine)
+  ai_service:
+    build: ./shakawa_api/ai_engine
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./shakawa_api/ai_engine:/app
+    environment:
+      - MODEL_NAME=/api.py/models
+
+  # 3. قاعدة البيانات (MySQL)
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: shakawa_db
+    ports:
+      - "3306:3306"
+
+  # 4. واجهة التحكم في الداتابيز (phpMyAdmin)
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=db
+      - MYSQL_ROOT_PASSWORD=password
+    depends_on:
+      - db

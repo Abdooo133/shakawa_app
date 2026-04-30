@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       var response = await http
           .post(
-            Uri.parse("http://${AppConfig.serverIp}/shakawa_api/sync_user.php"),
+            Uri.parse("https://${AppConfig.apiUrl}/shakawa_api/sync_user.php"),
             body: {
               "firebase_uid": user.uid,
               "email": user.email ?? "",

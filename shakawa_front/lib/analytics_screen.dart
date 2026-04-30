@@ -49,7 +49,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
     if (mounted) setState(() => isLoading = true);
     try {
       var response = await http.post(
-        Uri.parse('http://${AppConfig.serverIp}/shakawa_api/analytics.php'),
+        Uri.parse('https://${AppConfig.apiUrl}/shakawa_api/analytics.php'),
+        headers: {"ngrok-skip-browser-warning": "true"},
         body: {
           'company': selectedCompany,
           'trend': selectedTrend,

@@ -17,7 +17,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
   Map<String, dynamic>? complaintData;
   bool isLoading = true;
 
-  final String apiUrl = "http://${AppConfig.serverIp}/shakawa_api/";
+  final String apiUrl = "https://${AppConfig.apiUrl}/shakawa_api/";
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
       "${apiUrl}get_complaint_details.php?id=${widget.complaintId}",
     );
     try {
-      final response = await http.get(url).timeout(const Duration(seconds: 5));
+      final response = await http.get(url, headers: {"ngrok-skip-browser-warning": "true"}).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
         if (decoded['status'] == 'success') {

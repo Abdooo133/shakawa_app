@@ -44,10 +44,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
 
     final url = Uri.parse(
-      "http://${AppConfig.serverIp}/shakawa_api/get_notifications.php?customer_id=$currentId",
+      "https://${AppConfig.apiUrl}/shakawa_api/get_notifications.php?customer_id=$currentId",
     );
     try {
-      final response = await http.get(url).timeout(const Duration(seconds: 5));
+      final response = await http.get(url, headers: {"ngrok-skip-browser-warning": "true"}).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == 'success') {
@@ -72,7 +72,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Future<void> markAsRead(int notificationId, int index) async {
     final url = Uri.parse(
-      "http://${AppConfig.serverIp}/shakawa_api/mark_read.php",
+      "https://${AppConfig.apiUrl}/shakawa_api/mark_read.php",
     );
     try {
       await http.post(

@@ -122,7 +122,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
       String? token = await FirebaseMessaging.instance.getToken();
 
       var uri = Uri.parse(
-        'http://${AppConfig.serverIp}/shakawa_api/add_complaint.php',
+        'https://${AppConfig.apiUrl}/shakawa_api/add_complaint.php',
       );
       var request = http.MultipartRequest("POST", uri);
 

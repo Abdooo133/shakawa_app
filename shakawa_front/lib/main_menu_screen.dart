@@ -89,7 +89,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
       var response = await http
           .get(
             Uri.parse(
-              'http://${AppConfig.serverIp}/shakawa_api/get_summary.php',
+              'https://${AppConfig.apiUrl}/shakawa_api/get_summary.php',
             ),
           )
           .timeout(const Duration(seconds: 8));

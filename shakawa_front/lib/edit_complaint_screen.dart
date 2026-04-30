@@ -69,7 +69,7 @@ class _EditComplaintScreenState extends State<EditComplaintScreen> {
     setState(() => isUpdating = true);
 
     var url = Uri.parse(
-      "http://${AppConfig.serverIp}/shakawa_api/update_complaint.php",
+      "https://${AppConfig.apiUrl}/shakawa_api/update_complaint.php",
     );
     var request = http.MultipartRequest("POST", url);
 

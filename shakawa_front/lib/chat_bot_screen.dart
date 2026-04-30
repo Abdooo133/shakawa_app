@@ -57,8 +57,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
     try {
       var response = await http.post(
-        Uri.parse("http://${AppConfig.serverIp}:8000/chatbot"),
-        headers: {"Content-Type": "application/json"},
+        Uri.parse("https://${AppConfig.aiUrl}/shakawa_api/ai_proxy.php"),
+        headers: {"Content-Type": "application/json", "ngrok-skip-browser-warning": "true"},
         body: jsonEncode({
           "text": text.trim(),
           "customer_name": userName,
@@ -125,8 +125,9 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     try {
       var response = await http.post(
         Uri.parse(
-          "http://${AppConfig.serverIp}/shakawa_api/bot_actions.php?action=track",
+          "https://${AppConfig.apiUrl}/shakawa_api/bot_actions.php?action=track",
         ),
+        headers: {"ngrok-skip-browser-warning": "true"},
         body: {"complaint_id": id},
       );
 
@@ -184,8 +185,9 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
       var response = await http.post(
         Uri.parse(
-          "http://${AppConfig.serverIp}/shakawa_api/bot_actions.php?action=save",
+          "https://${AppConfig.apiUrl}/shakawa_api/bot_actions.php?action=save",
         ),
+        headers: {"ngrok-skip-browser-warning": "true"},
         body: {
           "customer_id": customerId.toString(), // 👈 دلوقتي بتتبعت صح
           "category": cat,
