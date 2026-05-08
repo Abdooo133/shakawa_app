@@ -89,7 +89,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
       var response = await http
           .get(
             Uri.parse(
-              'https://${AppConfig.apiUrl}/shakawa_api/get_summary.php',
+              '${AppConfig.apiUrl}/shakawa_api/get_summary.php',
             ),
             headers: {"ngrok-skip-browser-warning":"true"},
           )

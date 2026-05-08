@@ -8,6 +8,9 @@ import 'package:http/http.dart' as http;
 import 'constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:google_sign_in/google_sign_in.dart' as google_auth;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
 
 class LoginScreen extends StatefulWidget {
   // 🛠️ التعديل الأول: الطريقة الحديثة للـ Key
@@ -28,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       var response = await http
           .post(
-            Uri.parse("https://${AppConfig.apiUrl}/shakawa_api/sync_user.php"),
+            Uri.parse("${AppConfig.apiUrl}/shakawa_api/sync_user.php"),
                         headers: {"ngrok-skip-browser-warning":"true"},
 
             body: {
@@ -41,6 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['customer_id'] != null && data['customer_id'] != 0) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setInt('customer_id', data['customer_id']);
+          } 
         debugPrint("✅ تم ربط الحساب بقاعدة البيانات بنجاح");
       }
     } catch (e) {

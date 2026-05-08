@@ -22,17 +22,25 @@ class _NotificationBellState extends State<NotificationBell> {
     checkUnreadNotifications();
   }
 
+  @override
+  void didUpdateWidget(NotificationBell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.customerId == 0 && widget.customerId > 0) {
+      checkUnreadNotifications();
+    }
+  }
+
   Future<void> checkUnreadNotifications() async {
     // 🛡️ التعديل الأول: توفير استهلاك السيرفر لو الـ ID لسه مجهول
     if (widget.customerId == 0) return;
 
     final url = Uri.parse(
-      "https://${AppConfig.apiUrl}/shakawa_api/get_notifications.php?customer_id=${widget.customerId}",
+      "${AppConfig.apiUrl}/shakawa_api/get_notifications.php?customer_id=${widget.customerId}",
     );
 
     try {
       // 🛡️ التعديل التاني: إضافة Timeout
-      final response = await http.get(url, headers: {"ngrok-skip-browser-warning": "true"}).timeout(const Duration(seconds: 5));
+      final response = await http.get(url, headers: {"ngrok-skip-browser-warning": "true"}).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

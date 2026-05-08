@@ -69,11 +69,10 @@ class _EditComplaintScreenState extends State<EditComplaintScreen> {
     setState(() => isUpdating = true);
 
     var url = Uri.parse(
-      "https://${AppConfig.apiUrl}/shakawa_api/update_complaint.php",
+      "${AppConfig.apiUrl}/shakawa_api/update_complaint.php",
     );
     var request = http.MultipartRequest("POST", url);
     request.headers['ngrok-skip-browser-warning'] = 'true';
-
     request.fields['complaint_id'] = widget.complaintData['id'].toString();
     request.fields['description'] = descController.text.trim();
     request.fields['location'] = locationController.text.trim();
@@ -90,7 +89,7 @@ class _EditComplaintScreenState extends State<EditComplaintScreen> {
 
     try {
       var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
+      var response = await http.Response.fromStream(streamedResponse).timeout(const Duration(seconds: 10));
 
       debugPrint("رد سيرفر التعديل: ${response.body}");
 

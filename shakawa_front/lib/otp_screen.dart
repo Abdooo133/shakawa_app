@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'main_menu_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'constants.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
@@ -89,7 +93,6 @@ class _OtpScreenState extends State<OtpScreen> {
     } on FirebaseAuthException catch (e) {
       debugPrint("OTP Verification Error: ${e.message}");
        if (!mounted) return;
-      if (!mounted) return;
       _showSnackBar("الكود غير صحيح، راجع الرسالة تاني".tr(), Colors.red);
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -142,15 +145,38 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  void _goToMainScreen() {
-    if (mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const MainMenuScreen()),
-        (route) => false,
-      );
+void _goToMainScreen() async {
+    // ✅ أضف الـ sync قبل الانتقال
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+        try {
+            final prefs = await SharedPreferences.getInstance();
+            var response = await http.post(
+                Uri.parse("${AppConfig.apiUrl}/shakawa_api/sync_user.php"),
+                headers: {"ngrok-skip-browser-warning": "true"},
+                body: {
+                    "firebase_uid": user.uid,
+                    "email": user.email ?? "",
+                    "full_name": user.displayName ?? "مستخدم جديد",
+                    "phone": user.phoneNumber ?? "",
+                },
+            );
+            var data = jsonDecode(response.body);
+            if (data['customer_id'] != null && data['customer_id'] != 0) {
+                await prefs.setInt('customer_id', data['customer_id']);
+            }
+        } catch (e) {
+            debugPrint("Sync error: $e");
+        }
     }
-  }
+    if (mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const MainMenuScreen()),
+            (route) => false,
+        );
+    }
+}
 
   void _showSnackBar(String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(

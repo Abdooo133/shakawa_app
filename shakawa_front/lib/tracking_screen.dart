@@ -43,7 +43,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
     });
 
     var url = Uri.parse(
-      'https://${AppConfig.apiUrl}/shakawa_api/search_complaint.php',
+      '${AppConfig.apiUrl}/shakawa_api/search_complaint.php',
     );
 
     try {

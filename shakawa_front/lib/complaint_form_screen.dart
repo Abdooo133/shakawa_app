@@ -8,6 +8,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'success_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 
@@ -122,7 +123,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
       String? token = await FirebaseMessaging.instance.getToken();
 
       var uri = Uri.parse(
-        'https://${AppConfig.apiUrl}/shakawa_api/add_complaint.php',
+        '${AppConfig.apiUrl}/shakawa_api/add_complaint.php',
       );
       var request = http.MultipartRequest("POST", uri);
       request.headers['ngrok-skip-browser-warning'] = 'true';
@@ -141,6 +142,9 @@ class _ComplaintFormState extends State<ComplaintForm> {
       request.fields['company_name'] = widget.companyName == 'جهة عامة'
           ? 'شكوى عامة'
           : widget.companyName;
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      request.fields['firebase_uid'] = firebaseUser?.uid ?? "";
+
 
       if (selectedImage != null) {
         request.files.add(

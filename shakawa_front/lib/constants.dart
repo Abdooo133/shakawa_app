@@ -1,13 +1,21 @@
 class AppConfig {
-  static const String apiUrl = "payable-quickly-operating.ngrok-free.dev";
-  static const String aiUrl = "payable-quickly-operating.ngrok-free.dev";
+//google cloud
+static const String apiUrl = "http://34.121.1.131";
+static const String aiUrl  = "http://34.121.1.131:8000";
+
+// DOCKER
+//   static const String apiUrl = "http://192.168.1.17:8080";
+//   static const String aiUrl = "http://192.168.1.17:8000";
 
 
+//ngrok
+ //  static const String apiUrl = "https://payable-quickly-operating.ngrok-free.dev";
 
-//local : 127.0.0.1
 
-//server :34.121.1.131
+//local
+ //static const String apiUrl = "http://127.0.0.1:8080";
+ //static const String aiUrl = "http://127.0.0.1:8000";
 
-//linux : 192.168.1.32
+
 
 }

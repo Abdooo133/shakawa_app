@@ -17,7 +17,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
   Map<String, dynamic>? complaintData;
   bool isLoading = true;
 
-  final String apiUrl = "https://${AppConfig.apiUrl}/shakawa_api/";
+  final String apiUrl = "${AppConfig.apiUrl}/shakawa_api/";
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
       return;
     }
     final url = Uri.parse(
-      "${apiUrl}get_complaint_details.php?id=${widget.complaintId}",
+      "${AppConfig.apiUrl}/shakawa_api/get_complaint_details.php?id=${widget.complaintId}",
     );
     try {
       final response = await http.get(url, headers: {"ngrok-skip-browser-warning": "true"}).timeout(const Duration(seconds: 5));
@@ -56,7 +56,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
 
   Future<void> _submitCustomerDecision(String decision) async {
     setState(() => isLoading = true);
-    final url = Uri.parse("${apiUrl}confirm_resolution.php");
+    final url = Uri.parse("${AppConfig.apiUrl}/shakawa_api/confirm_resolution.php");
 
     try {
       final response = await http.post(

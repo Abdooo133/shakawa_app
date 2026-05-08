@@ -41,7 +41,6 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       });
     }
   }
-
   void sendMessage(String text) async {
     if (text.trim().isEmpty) return;
 
@@ -53,12 +52,22 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       });
       isLoading = true;
     });
+
     _controller.clear();
 
     try {
+      // طباعة للرابط للتأكد منه قبل الإرسال (تفيد جداً في الـ Debugging)
+      String aiEndpoint = "${AppConfig.aiUrl}/chatbot";
+      //String aiEndpoint = "${AppConfig.apiUrl}/shakawa_api/ai_proxy.php"; --- NGROK ---
+      debugPrint("Sending to AI Server: $aiEndpoint");
+
       var response = await http.post(
-        Uri.parse("https://${AppConfig.aiUrl}/shakawa_api/ai_proxy.php"),
-        headers: {"Content-Type": "application/json", "ngrok-skip-browser-warning": "true"},
+        Uri.parse(aiEndpoint),
+        // 👇 تفعيل الـ Headers إجباري عشان FastAPI يقبل الـ JSON
+        headers: {
+          "Content-Type": "application/json", 
+          "ngrok-skip-browser-warning": "true"
+        },
         body: jsonEncode({
           "text": text.trim(),
           "customer_name": userName,
@@ -70,6 +79,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(utf8.decode(response.bodyBytes));
+
         setState(() {
           globalChatMessages.add({
             "sender": "bot",
@@ -80,11 +90,11 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           });
         });
 
-        if (data['type'] == 'track') {
-          trackComplaint(data['id']);
+        if (data['type'] == 'go_to_track') {
+          trackComplaint(data['id'] ?? "");
         } else if (data['type'] == 'go_to_form') {
           Future.delayed(const Duration(seconds: 2), () {
-            if (!mounted) return; // 🛡️ حماية الـ Async
+            if (!mounted) return;
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -96,19 +106,25 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           });
         } else if (data['type'] == 'go_to_track') {
           Future.delayed(const Duration(seconds: 2), () {
-            if (!mounted) return; // 🛡️ حماية الـ Async
+            if (!mounted) return;
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    TrackingScreen(initialId: data['id'] ?? ""),
+                builder: (context) => TrackingScreen(initialId: data['id'] ?? ""),
               ),
             );
           });
         }
+      } else {
+        // لو السيرفر رد بكود غير 200 (مثلا 422 أو 500)
+        debugPrint("Server Error: ${response.statusCode} - ${response.body}");
+        throw Exception("Server returned ${response.statusCode}");
       }
     } catch (e) {
       if (!mounted) return;
+      // 👇 طباعة الإيرور الحقيقي عشان لو معصلج نعرف السبب فوراً
+      debugPrint("ChatBot Catch Error: $e"); 
+      
       setState(
         () => globalChatMessages.add({
           "sender": "bot",
@@ -120,12 +136,13 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       if (mounted) setState(() => isLoading = false);
     }
   }
+ 
 
   void trackComplaint(String id) async {
     try {
       var response = await http.post(
         Uri.parse(
-          "https://${AppConfig.apiUrl}/shakawa_api/bot_actions.php?action=track",
+          "${AppConfig.apiUrl}/shakawa_api/bot_actions.php?action=track",
         ),
         headers: {"ngrok-skip-browser-warning": "true"},
         body: {"complaint_id": id},
@@ -185,7 +202,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
       var response = await http.post(
         Uri.parse(
-          "https://${AppConfig.apiUrl}/shakawa_api/bot_actions.php?action=save",
+          "${AppConfig.apiUrl}/shakawa_api/bot_actions.php?action=save",
         ),
         headers: {"ngrok-skip-browser-warning": "true"},
         body: {
