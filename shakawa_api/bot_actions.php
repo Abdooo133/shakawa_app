@@ -43,7 +43,7 @@ elseif ($action == 'track') {
         if ($row = $res->fetch_assoc()) {
             echo json_encode([
                 "status" => "success", 
-                "status_val" => $row['status'],
+                "state" => $row['status'],
                 "service_type" => $row['ai_category'], 
                 "description" => $row['description']
             ], JSON_UNESCAPED_UNICODE);

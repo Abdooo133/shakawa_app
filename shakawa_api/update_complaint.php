@@ -1,5 +1,7 @@
 <?php
-error_reporting(0); // 🛡️ حماية الـ JSON من أي تداخل
+// غيّر دي
+error_reporting(0);
+
 header('Content-Type: application/json; charset=utf-8');
 include 'connect.php';
 

@@ -1,8 +1,24 @@
 <?php
+
+//google cloud
 $servername = "db";
 $username = "root";
-$password = "password";
-$dbname = "shakawa_db"; 
+$password = "Abdo@2026";
+$dbname = "shakawa_backend";
+
+// //docker
+// $servername = "db";
+// $username = "root";
+// $password = "password";
+// $dbname = "shakawa_db"; 
+
+//local
+// $servername = "db";
+// $username = "root";
+// $password = "123456";
+// $dbname = "shakawa_db"; 
+
+ 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -19,19 +35,5 @@ if ($conn->connect_error) {
     ]));
 }
 
-
-//local
-//password:123456
-//dbname:shakawa_db
-
-//docker
-//server name = db
-//username= root 
-//password=password 
-//dbname=shakawa_db
-
-//google
-//password:Abdo@2026
-//dbname:shakawa_backend
 
 ?>

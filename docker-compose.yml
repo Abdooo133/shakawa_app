@@ -1,25 +1,38 @@
 version: '3.8'
 
+
 services:
   # 1. سيرفر الويب (الـ API والـ Admin)
   web_server:
     build: ./shakawa_api
+    restart: always
     ports:
       - "8080:80"
     volumes:
       - .:/var/www/html
+      - ./shakawa_api/uploads:/var/www/html/shakawa_api/uploads
+    environment:
+      - DOCKER_ENV=true
+      - AI_SERVICE_URL=http://ai_service:8000/chatbot
     depends_on:
       - db
+      - ai_service
 
   # 2. سيرفر بايثون (AI Engine)
   ai_service:
     build: ./shakawa_api/ai_engine
+    restart: always
     ports:
       - "8000:8000"
     volumes:
       - ./shakawa_api/ai_engine:/app
     environment:
-      - MODEL_NAME=/api.py/models
+      - GEMINI_KEY_1=${GEMINI_KEY_1}
+      - GEMINI_KEY_2=${GEMINI_KEY_2}
+      - GEMINI_KEY_3=${GEMINI_KEY_3}
+      - GEMINI_KEY_4=${GEMINI_KEY_4}
+      - GEMINI_KEY_5=${GEMINI_KEY_5}
+      - DOCKER_ENV=true
 
   # 3. قاعدة البيانات (MySQL)
   db:
@@ -30,6 +43,8 @@ services:
       MYSQL_DATABASE: shakawa_db
     ports:
       - "3306:3306"
+    volumes:
+        - db_data:/var/lib/mysql
 
   # 4. واجهة التحكم في الداتابيز (phpMyAdmin)
   phpmyadmin:
@@ -42,3 +57,7 @@ services:
       - MYSQL_ROOT_PASSWORD=password
     depends_on:
       - db
+
+volumes:
+  db_data:
+

@@ -110,7 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $ai_category = "غير مصنف"; 
     if (!empty($description)) {
         $data_to_python = json_encode(array("text" => $description,"customer_name"=>$full_name), JSON_UNESCAPED_UNICODE);
-        $ch = curl_init("http://127.0.0.1:8000/chatbot");
+        $ai_url = getenv('AI_SERVICE_URL') ?: "http://localhost:8000/chatbot";
+        $ch = curl_init($ai_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_POST, true);
@@ -196,6 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($conn->query($sql)) {
             $complaint_id = $conn->insert_id;
             $msg = "تم استلام شكواك لشركة ($company_name) بنجاح برقم #$complaint_id";
+            $msg_safe = mysqli_real_escape_string($conn, $msg);
             $conn->query("INSERT INTO notifications (customer_id, complaint_id, message) VALUES ($customer_id, $complaint_id, '$msg')");
             
             if (!empty($device_token) && $device_token !== 'NULL') {

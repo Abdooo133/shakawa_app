@@ -9,7 +9,7 @@ include '../connect.php';
 // --- زتونة نظام الساعة (تحديث تلقائي للشكاوى المتأخرة) ---
 $sql_auto_solve = "UPDATE complaints 
                    SET status = 'تم الحل', 
-                       admin_reply = 'تم إغلاق الشكوى تلقائياً لعدم رد العميل خلال المهلة المحددة (ساعة)' 
+                       admin_reply = CONCAT(IFNULL(admin_reply, ''), 'تم إغلاق الشكوى تلقائياً لعدم رد العميل خلال المهلة المحددة (ساعة)') 
                    WHERE status = 'بانتظار تأكيد العميل' 
                    AND approval_requested_at <= DATE_SUB(NOW(), INTERVAL 1 HOUR)";
 

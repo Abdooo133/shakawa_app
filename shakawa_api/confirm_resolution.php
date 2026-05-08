@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // 🚀 التعديل الجوهري: استخدام CONCAT عشان نحتفظ بالرد القديم ونضيف عليه الجديد
-        $stmt = $conn->prepare("UPDATE complaints SET status = ?, admin_reply = CONCAT(IFNULL(admin_reply, ''), '\n\n', ?) WHERE id = ?");
-        $stmt->bind_param("ssi", $new_status, $msg, $id);
+        $stmt = $conn->prepare("UPDATE complaints SET status = ?, admin_reply = ? , customer_approval = ? WHERE id = ?");
+        $stmt->bind_param("sssi", $new_status, $msg, $decision, $id);
 
         if ($stmt->execute()) {
             echo json_encode(["status" => "success", "message" => "تم التحديث بنجاح"], JSON_UNESCAPED_UNICODE);
