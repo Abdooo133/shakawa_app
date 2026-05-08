@@ -1,22 +1,21 @@
-name: Build All Platforms
+name: Production Release
 
 on:
   push:
-    branches: [ "main" ]
+    tags:
+      - 'v*' # هيشتغل لما تعمل tag جديد زي v1.0.0
 
 jobs:
-  build-android-linux:
-    name: Build Android & Linux
-    runs-on: ubuntu-latest
+  build-all:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -27,50 +26,21 @@ jobs:
         working-directory: ./shakawa_front
         run: flutter pub get
 
-      - name: Build Android APK
-        working-directory: ./shakawa_front
-        run: flutter build apk --release
-
-      - name: Build Linux
+      - name: Build Platform
         working-directory: ./shakawa_front
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
-          flutter build linux --release
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            flutter build windows --release
+          else
+            flutter build macos --release
+          fi
+        shell: bash
 
-      - name: Upload Android & Linux
-        uses: actions/upload-artifact@v4
+      - name: Release Apps
+        uses: softprops/action-gh-release@v1
         with:
-          name: android-linux-builds
-          path: |
-            shakawa_front/build/app/outputs/flutter-apk/app-release.apk
-            shakawa_front/build/linux/x64/release/bundle/
-
-  build-windows:
-    name: Build Windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          
-      - name: Enable Windows Desktop
-        run: flutter config --enable-windows-desktop
-        
-      - name: Install dependencies
-        working-directory: ./shakawa_front
-        run: flutter pub get
-        
-      - name: Build Windows
-        working-directory: ./shakawa_front
-        run: flutter build windows --release
-        
-      - name: Upload Windows
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-build
-          path: shakawa_front/build/windows/x64/runner/Release/
+          files: |
+            shakawa_front/build/windows/x64/runner/Release/*
+            shakawa_front/build/macos/Build/Products/Release/*.app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
