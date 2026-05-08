@@ -3,16 +3,11 @@ name: Production Release
 on:
   push:
     tags:
-      - 'v*' # هيشتغل لما تعمل tag جديد زي v1.0.0
+      - 'v*'
 
 jobs:
-  build-all:
-    name: Build for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest]
-
+  build-windows:
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,21 +21,13 @@ jobs:
         working-directory: ./shakawa_front
         run: flutter pub get
 
-      - name: Build Platform
+      - name: Build Windows
         working-directory: ./shakawa_front
-        run: |
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            flutter build windows --release
-          else
-            flutter build macos --release
-          fi
-        shell: bash
+        run: flutter build windows --release
 
-      - name: Release Apps
+      - name: Release Windows App
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            shakawa_front/build/windows/x64/runner/Release/*
-            shakawa_front/build/macos/Build/Products/Release/*.app
+          files: shakawa_front/build/windows/x64/runner/Release/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
