@@ -1,0 +1,128 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'   # بيشتغل لما تعمل tag زي v1.0.0
+
+jobs:
+
+  # ─── Android ───────────────────────────────────
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: stable
+
+      - run: flutter pub get
+      - run: flutter build apk --release --split-per-abi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/apk/release/*.apk
+
+  # ─── Windows ───────────────────────────────────
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: stable
+
+      - run: flutter pub get
+      - run: flutter build windows --release
+
+      - name: Zip the build
+        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath windows-release.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: windows-release.zip
+
+  # ─── Linux ─────────────────────────────────────
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: stable
+
+      - run: flutter pub get
+      - run: flutter build linux --release
+
+      - name: Zip the build
+        run: zip -r linux-release.zip build/linux/x64/release/bundle/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: linux-release.zip
+
+  # ─── macOS ─────────────────────────────────────
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: stable
+
+      - run: flutter pub get
+      - run: flutter build macos --release
+
+      - name: Zip the build
+        run: zip -r macos-release.zip build/macos/Build/Products/Release/*.app
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: macos-release.zip
+
+  # ─── iOS ───────────────────────────────────────
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: stable
+
+      - run: flutter pub get
+      - run: flutter build ios --release --no-codesign
+
+      - name: Zip the build
+        run: zip -r ios-release.zip build/ios/Release-iphoneos/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: ios-release.zip
+
+  # ─── GitHub Release ────────────────────────────
+  release:
+    needs: [build-android, build-windows, build-linux, build-macos, build-ios]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**
+          generate_release_notes: true
