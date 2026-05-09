@@ -47,29 +47,7 @@ jobs:
           name: windows-build
           path: shakawa_front/windows-release.zip
 
-  # ─── Linux ─────────────────────────────────────
-  build-linux:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./shakawa_front
-    steps:
-      - uses: actions/checkout@v4
-      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
-        working-directory: .
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.x'
-          channel: stable
-      - run: flutter pub get
-      - run: flutter build linux --release
-      - name: Zip the build
-        run: zip -r linux-release.zip build/linux/x64/release/bundle/
-      - uses: actions/upload-artifact@v4
-        with:
-          name: linux-build
-          path: shakawa_front/linux-release.zip
-
+  
   # ─── macOS ─────────────────────────────────────
   build-macos:
     runs-on: macos-latest
@@ -93,7 +71,7 @@ jobs:
 
   # ─── GitHub Release ────────────────────────────
   release:
-    needs: [build-android, build-windows, build-linux, build-macos]
+    needs: [build-android, build-windows, build-macos]
     runs-on: ubuntu-latest
     permissions:
       contents: write

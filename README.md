@@ -1,7 +1,7 @@
 # 🦅 Shakawa App
 
-منصة شكاوى متكاملة تشمل تطبيق الموبايل والويب، الـ API، وقاعدة البيانات.
-
+مشروع 79 :
+نظام تحليل بيانات شكاوى العملاء لتحسين مستوى الخدمة في شركات الاتصالات
 ---
 
 ## 📁 هيكل المشروع
@@ -9,7 +9,7 @@
 ```
 shakawa_app/
 │
-├── 📱 shakawa_front/        # تطبيق Flutter (Android, iOS, Windows, Linux, macOS)
+├── 📱 shakawa_front/        # تطبيق Flutter (Android, Windows, macOS)
 │
 ├── ⚙️ shakawa_api/          # الـ Backend (API)
 │
@@ -19,6 +19,13 @@ shakawa_app/
 │
 └── 🐳 docker-compose.yml    # لتشغيل البيئة كاملة
 ```
+
+| المجلد | الوصف |
+|---|---|
+| [📱 shakawa_front](./shakawa_front) | تطبيق Flutter |
+| [⚙️ shakawa_api](./shakawa_api) | الـ Backend |
+| [🗄️ shakawa_db](./shakawa_db) | قاعدة البيانات |
+| [📖 Documentation](./Documentation) | التوثيق الكامل |
 
 ---
 
@@ -33,7 +40,7 @@ shakawa_app/
 1. نزّل ملف **`app-release.apk`**
 2. افتحه على تليفونك
 3. لو ظهرت رسالة — اضغط **السماح** بتنصيب من مصادر خارجية
-4. اضغط **تثبيت** وخلاص ✅
+4. اضغط **تثبيت** ✅
 
 ---
 
@@ -42,20 +49,6 @@ shakawa_app/
 1. نزّل ملف **`windows-release.zip`**
 2. فك الضغط
 3. افتح الفولدر وشغّل ملف **`.exe`** ✅
-
----
-
-### 🐧 Linux
-
-1. نزّل ملف **`linux-release.zip`**
-2. فك الضغط
-3. افتح الـ Terminal في الفولدر وشغّل:
-
-```bash
-chmod +x shakawa_front
-./shakawa_front
-```
-✅
 
 ---
 
@@ -70,11 +63,7 @@ chmod +x shakawa_front
 
 ## 📖 التوثيق
 
-لو عاوز تعرف أكتر عن المشروع — تصميم النظام، الـ API، وهيكل قاعدة البيانات — كل ده موجود في:
-
-```
-📂 Documentation/
-```
+لو عاوز تعرف أكتر عن المشروع — تصميم النظام، الـ API، وهيكل قاعدة البيانات — كل ده موجود في [**📂 Documentation**](./Documentation).
 
 ---
 
