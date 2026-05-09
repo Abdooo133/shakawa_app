@@ -41,11 +41,11 @@ jobs:
       - run: flutter pub get
       - run: flutter build windows --release
       - name: Zip the build
-        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath ../../windows-release.zip
+        run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath windows-release.zip
       - uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: windows-release.zip
+          path: shakawa_front/windows-release.zip
 
   # ─── Linux ─────────────────────────────────────
   build-linux:
@@ -64,11 +64,11 @@ jobs:
       - run: flutter pub get
       - run: flutter build linux --release
       - name: Zip the build
-        run: zip -r ../../linux-release.zip build/linux/x64/release/bundle/
+        run: zip -r linux-release.zip build/linux/x64/release/bundle/
       - uses: actions/upload-artifact@v4
         with:
           name: linux-build
-          path: linux-release.zip
+          path: shakawa_front/linux-release.zip
 
   # ─── macOS ─────────────────────────────────────
   build-macos:
@@ -85,11 +85,11 @@ jobs:
       - run: flutter pub get
       - run: flutter build macos --release
       - name: Zip the build
-        run: zip -r ../../macos-release.zip build/macos/Build/Products/Release/
+        run: zip -r macos-release.zip build/macos/Build/Products/Release/
       - uses: actions/upload-artifact@v4
         with:
           name: macos-build
-          path: macos-release.zip
+          path: shakawa_front/macos-release.zip
 
   # ─── GitHub Release ────────────────────────────
   release:
