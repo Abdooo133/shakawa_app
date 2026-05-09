@@ -11,7 +11,7 @@ project 'Runner', {
 
 def flutter_root
   # لاحظ التعديل هنا: استخدام FILE بالشرطات
-  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), _FILE_)
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
   unless File.exist?(generated_xcode_build_settings_path)
     raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get has been executed."
   end
@@ -30,7 +30,7 @@ target 'Runner' do
   use_modular_headers!
 
   # لاحظ التعديل هنا أيضاً: FILE
-  flutter_install_all_ios_pods File.dirname(File.realpath(_FILE_))
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
 post_install do |installer|
