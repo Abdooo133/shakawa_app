@@ -10,6 +10,7 @@ project 'Runner', {
 }
 
 def flutter_root
+  # لاحظ التعديل هنا: استخدام FILE بالشرطات
   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), FILE)
   unless File.exist?(generated_xcode_build_settings_path)
     raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get has been executed."
@@ -28,6 +29,7 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
+  # لاحظ التعديل هنا أيضاً: FILE
   flutter_install_all_ios_pods File.dirname(File.realpath(FILE))
 end
 
@@ -35,7 +37,7 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
-      # تأكيد إضافي لرفع النسخة لكل الـ Dependencies
+      # ضمان توافق كل المكتبات مع إصدار 13.0
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
     end
   end
