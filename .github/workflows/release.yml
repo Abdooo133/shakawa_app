@@ -99,32 +99,20 @@ jobs:
         working-directory: ./shakawa_front
     steps:
       - uses: actions/checkout@v4
-      
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
           channel: stable
-          
       - run: flutter pub get
-
-      - name: Fix Podfile & Install Pods
-        run: |
-          cd ios
-          sed -i '' "s/^# platform :ios.*/platform :ios, '13.0'/g" Podfile
-          if ! grep -q "platform :ios" Podfile; then
-            echo "platform :ios, '13.0'" | cat - Podfile > temp && mv temp Podfile
-          fi
-          pod install --repo-update
-          cd ..
-
       - run: flutter build ios --release --no-codesign
-      
       - name: Package as IPA
         run: |
           mkdir -p Payload
           cp -r build/ios/iphoneos/Runner.app Payload/
           zip -r ../../ios-release.ipa Payload/
-        
       - uses: actions/upload-artifact@v4
         with:
           name: ios-build
